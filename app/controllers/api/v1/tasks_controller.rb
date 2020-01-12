@@ -1,6 +1,6 @@
 class Api::V1::TasksController < ApplicationController
   def index
-	task = Task.all.order(created_at: :desc)
+	task = Task.all.order(updated_at: :desc)
 	render json: task
   end
 
@@ -28,7 +28,7 @@ class Api::V1::TasksController < ApplicationController
 
   def destroy
 	task&.destroy
-	redirect_to tasks_path
+	render json: { message: 'Task deleted.' }
   end
   
   private

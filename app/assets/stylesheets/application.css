@@ -47,3 +47,16 @@
 .header1 {
   margin-top: 20px;
 }
+
+.tag {
+	display: inline-block;
+    border-radius: 4px;
+	background-color: #f4511e;
+	color: white;
+    border: none;
+	text-align: center;
+	padding: 2px;
+	margin: 2px;
+	font-style: italic;
+	font-size: 12px;
+} 

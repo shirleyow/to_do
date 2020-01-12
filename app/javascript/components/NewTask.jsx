@@ -12,7 +12,6 @@ class NewTask extends React.Component {
 			completed: false
 		}
 		
-		this.tagsOnChange = this.tagsOnChange.bind(this)
 		this.onChange = this.onChange.bind(this)
 		this.onSubmit = this.onSubmit.bind(this)
 		this.stripHtmlEntities = this.stripHtmlEntities.bind(this)
@@ -28,15 +27,18 @@ class NewTask extends React.Component {
 		this.setState({ [event.target.name]: event.target.value })
 	}
 	
-	tagsOnChange(event) {
-		let the_tags = event.target.value.split(',').map(item => item.trim())
-		this.state['tags'] = the_tags
-		this.setState({ ['tags']: the_tags })
-	}
-	
 	onSubmit(event) {
 		event.preventDefault()
 		const url = "/api/v1/tasks/create"
+		if (this.state['tags'].length != 0) {
+			this.state['tags'] = this.state['tags'].replace(/(^,)|(,$)/g, "")
+			this.state['tags'] = "a" + this.state['tags'] + ", hello" // for the tags to be read correctly a character is added at the front and another tag is added at the back.
+			this.state['tags'] = this.state['tags'].split(',').map(
+				item => item.trim()
+			).filter(function(item) {
+				return item != "";
+			}).join()
+		}
 		const { title, deadline, tags, completed, description } = this.state
 		
 		if (title.length == 0) 
@@ -49,7 +51,6 @@ class NewTask extends React.Component {
 			completed,
 			description: description.replace(/\n/g, "<br> <br>")
 		}
-		
 		
 		const token = document.querySelector('meta[name="csrf-token"]').content
 		fetch(url, {
@@ -118,7 +119,7 @@ class NewTask extends React.Component {
 							id = "taskTags"
 							className = "form-control"
 							placeholder = "Optional"
-							onChange = {this.tagsOnChange}
+							onChange = {this.onChange}
 						/>
 						<small id = "tagsHelp" className = "form-text text-muted">
 							Separate each tag with a comma.

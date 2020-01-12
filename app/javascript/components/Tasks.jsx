@@ -25,16 +25,45 @@ class Tasks extends React.Component {
 		.catch(error => console.log(error));
   }
   
+  deleteTask(id) {
+	const url = `/api/v1/destroy/${id}`;
+	const token = document.querySelector('meta[name="csrf-token"]').content;
+
+	if (window.confirm('Are you sure?')) {
+		fetch(url, {
+		  method: "DELETE",
+		  headers: {
+			"X-CSRF-Token": token,
+			"Content-Type": "application/json"
+		  }
+		})
+		  .then(response => {
+			if (response.ok) {
+			  return response.json();
+			}
+			throw new Error("Network response was not ok.");
+		  })
+		  .then(() => window.location.replace("/tasks"))
+		  .catch(error => console.log(error.message));
+	}
+  }
+  
   render() {
 	const { tasks } = this.state
+	console.log(this.state)
 	const allTasks = tasks.map((task, index) => (
 		<div key={index} className="col-md-6 col-lg-4">
 			<div className = "card-body">
 				<h5 className = "card-title"><i className = "far fa-circle"></i>   {task.title}</h5>
 				<h6><i className = "fas fa-bars unclicked"></i> {task.description}</h6>
 				<h6><i className = "fas fa-calendar-day unclicked"></i> {task.deadline}</h6>
-				<h6><i className = "fas fa-tags unclicked"></i> {task.tags}</h6>
+				<h6><i className = "fas fa-tags unclicked"></i> {task.tags.map(
+					item => <span className = "tag">{item}</span>
+				)}</h6>
 			</div>
+			<button type="button" className="btn btn-sm btn-danger" onClick={(e) => this.deleteTask(task.id)}>
+				<i className ="fas fa-trash-alt"></i>
+			</button>
 		</div>
 	))
 	const noTask = (
