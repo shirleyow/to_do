@@ -8,8 +8,7 @@ class EditTask extends React.Component {
 			title: "",
 			description: "",
 			deadline: null,
-			tags: [],
-			completed: false
+			tags: []
 		}
 		
 		this.onChange = this.onChange.bind(this)
@@ -31,7 +30,7 @@ class EditTask extends React.Component {
 				return item != "";
 			}).join()
 		} 
-		const { title, deadline, tags, completed, description } = this.state
+		const { title, deadline, tags, description } = this.state
 		
 		if (title.length == 0) 
 			return
@@ -40,7 +39,6 @@ class EditTask extends React.Component {
 			title,
 			deadline,
 			tags,
-			completed,
 			description: description.replace(/\n/g, "<br> <br>")
 		}
 		
@@ -80,7 +78,6 @@ class EditTask extends React.Component {
 							title: item.title,
 							deadline: item.deadline,
 							description: item.description,
-							completed: item.completed,
 							tags: item.tags
 						});
 					} // can be more efficient

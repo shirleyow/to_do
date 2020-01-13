@@ -32,12 +32,13 @@ class NewTask extends React.Component {
 		const url = "/api/v1/tasks/create"
 		if (this.state['tags'].length != 0) {
 			this.state['tags'] = this.state['tags'].replace(/(^,)|(,$)/g, "")
-			this.state['tags'] = "a" + this.state['tags'] + ", hello" // for the tags to be read correctly a character is added at the front and another tag is added at the back.
-			this.state['tags'] = this.state['tags'].split(',').map(
+			this.state['tags'] = this.state['tags'] + ", hello" // for the tags to be read correctly a character is added at the front and another tag is added at the back.
+			this.state['tags'] = [...new Set(this.state['tags'].split(',').map(
 				item => item.trim()
 			).filter(function(item) {
 				return item != "";
-			}).join()
+			}))].join()
+			this.state['tags'] = "a" + this.state['tags']
 		}
 		const { title, deadline, tags, completed, description } = this.state
 		
