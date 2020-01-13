@@ -59,4 +59,8 @@
 	margin: 2px;
 	font-style: italic;
 	font-size: 12px;
-} 
+}
+
+#trash {
+	margin-right: 5px;
+}

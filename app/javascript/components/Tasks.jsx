@@ -50,7 +50,7 @@ class Tasks extends React.Component {
   
   render() {
 	const { tasks } = this.state
-	console.log(this.state)
+	//console.log(this.state)
 	const allTasks = tasks.map((task, index) => (
 		<div key={index} className="col-md-6 col-lg-4">
 			<div className = "card-body">
@@ -61,9 +61,12 @@ class Tasks extends React.Component {
 					item => <span className = "tag">{item}</span>
 				)}</h6>
 			</div>
-			<button type="button" className="btn btn-sm btn-danger" onClick={(e) => this.deleteTask(task.id)}>
+			<button type="button" id = "trash" className="btn btn-sm btn-danger" onClick={(e) => this.deleteTask(task.id)}>
 				<i className ="fas fa-trash-alt"></i>
 			</button>
+			<Link to = {`/update/${task.id}`} className="btn btn-sm btn-primary">
+				<i className ="fas fa-edit"></i>
+			</Link>
 		</div>
 	))
 	const noTask = (
@@ -75,6 +78,8 @@ class Tasks extends React.Component {
 	)
 	
 	let today = new Date()
+	let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	
 	return (
 		<>
@@ -85,14 +90,14 @@ class Tasks extends React.Component {
           <div className="container py-5">
             <h1 className="display-4">All Tasks</h1>
             <p className="lead text-muted">
-			{today.toString()}
+			{days[today.getDay()] + ", " + today.getDate() + " " + months[today.getMonth()] + " " + today.getFullYear()}
             </p>
 		  </div>
 		</section>
 		<div className="py-5">
           <main className="container">
             <div className="text-right mb-3">
-              <Link to="/task" className="btn custom-button">
+              <Link to="/new" className="btn custom-button">
                 New Task
               </Link>
             </div>
