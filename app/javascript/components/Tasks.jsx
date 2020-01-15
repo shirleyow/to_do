@@ -1,15 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome"
-import "../../../node_modules/@fortawesome/fontawesome-free/scss/solid"
-import "../../../node_modules/@fortawesome/fontawesome-free/scss/regular"
+import "../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
+import "../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
+import "../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
 
 class Tasks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: []
+      tasks: [],
+	  search: ""
     };
+	
+	this.updateSearch = this.updateSearch.bind(this);
   }
   
   componentDidMount() {
@@ -72,10 +75,13 @@ class Tasks extends React.Component {
 	}
   }
   
+  updateSearch(event) {
+	this.setState({ search: event.target.value });
+  }
+   
   render() {
-	const { tasks } = this.state
 	//console.log(this.state)
-	const allTasks = tasks.filter(t => !t.completed).map((task, index) => (
+  const allTasks = this.state.tasks.filter(t => !t.completed && (t.tags.includes(this.state.search) || t.title.indexOf(this.state.search) != -1 || t.description.indexOf(this.state.search) != -1)).map((task, index) => (
 		<div key={index} className="col-md-6 col-lg-4">
 			<div className = "card-body">
 				<h5 className = "card-title"><i className = "far fa-circle" id = "checked" onClick = {(e) => this.toggleCheck(task.id, task)}></i>   {task.title}</h5>
@@ -96,7 +102,7 @@ class Tasks extends React.Component {
 	
 	// note that allTasks here refers to all ongoing tasks.
 	
-	const completedTasks = tasks.filter(t => t.completed).map((task, index) => (
+  const completedTasks = this.state.tasks.filter(t => t.completed && (t.tags.includes(this.state.search) || t.title.indexOf(this.state.search) != -1 || t.description.indexOf(this.state.search) != -1)).map((task, index) => (
 		<div key={index} className="col-md-6 col-lg-4">
 			<div className = "card-body">
 				<h5 className = "card-title"><i className = "far fa-circle" id = "checked" onClick = {(e) => this.toggleCheck(task.id, task)}></i>   <span className="striked">{task.title}</span></h5>
@@ -126,8 +132,15 @@ class Tasks extends React.Component {
 	let today = new Date()
 	let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-	let currentTasksLength = tasks.filter(t => !t.completed).length;
-	let completedTasksLength = tasks.filter(t => t.completed).length;
+	let currentTasksLength = this.state.tasks.filter(t => !t.completed).length;
+	let completedTasksLength = this.state.tasks.filter(t => t.completed).length;
+	let tags = [];
+	this.state.tasks.map(
+		item => {
+			tags.concat(item.tags)
+		}
+	)
+	tags = [...new Set(tags)];
 	
 	return (
 		<>
@@ -144,16 +157,24 @@ class Tasks extends React.Component {
 		</section>
 		<div className="py-5">
           <main className="container">
-            <div className="text-right mb-3">
-              <Link to="/new" className="btn custom-button">
-                New Task
-              </Link>
-            </div>
+			<div>
+				<div id = "searchbar">
+				  <input onChange = {this.updateSearch} value = {this.state.search} type = "text" className ="form-control" placeholder="Search" aria-label="Search"></input>
+				</div>
+				
+				<div className="text-right mb-3">
+				  <Link to="/new" className="btn custom-button">
+					New Task
+				  </Link>
+				</div>
+			</div>
+			
 			<div className="current">
 			  <h3>{currentTasksLength} Current Task(s):</h3>
 				<div className="row">{currentTasksLength > 0 ? allTasks : noTask}</div>
 			</div>
-			<div>  
+			
+			<div className="completed">  
 			  <h3>{completedTasksLength} Completed Task(s):</h3>
 				<div className="row">{completedTasksLength > 0 ? completedTasks : noTask}</div>
             </div>
