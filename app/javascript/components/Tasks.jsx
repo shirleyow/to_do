@@ -9,7 +9,8 @@ class Tasks extends React.Component {
     super(props);
     this.state = {
       tasks: [],
-	  search: ""
+	  search: "",
+	  searchBy: "Tags"
     };
 	
 	this.updateSearch = this.updateSearch.bind(this);
@@ -78,10 +79,57 @@ class Tasks extends React.Component {
   updateSearch(event) {
 	this.setState({ search: event.target.value });
   }
+  
+  updateSearchBy(name) {
+	this.setState({ searchBy: name });
+	const tablink = document.getElementsByClassName("tablinks active");
+	tablink[0].className = "tablinks";
+	document.getElementById(name).className += " active";
+	document.getElementById("search").placeholder = "Search for task(s) by " + name;
+	if (name == "Tags") {
+	  document.getElementById("search").placeholder += ", separated by commas";
+	}
+	if (name == "Deadline") {
+		document.getElementById("search").type = "date";
+	} else {
+		document.getElementById("search").type = "text";
+	}
+  }
+  
+  includes(list) {
+	var check = false;
+	const tags = [...new Set(this.state.search.toLowerCase().split(',').map(
+				item => item.trim()
+			).filter(function(item) {
+				return item != "";
+			}))]
+	for (var y in tags) {
+		check = false;
+		for (var x in list) {
+			if(list[x].indexOf(tags[y]) == 0) {
+			  check = true;
+			  break;
+			}
+		}
+		if (check == false) return false;
+	}
+	return true;
+  }
+  
+  includesTD(task) {
+	return task.title.toLowerCase().indexOf(this.state.search.toLowerCase())!= -1 || task.description.toLowerCase().indexOf(this.state.search.toLowerCase())!= -1;
+  }
    
   render() {
-  const uncomp = this.state.tasks.filter(t => !t.completed && (t.tags.map(v => v.toLowerCase()).includes(this.state.search.toLowerCase()) || t.title.toLowerCase().indexOf(this.state.search.toLowerCase()) != -1 || t.description.toLowerCase().indexOf(this.state.search.toLowerCase()) != -1))
-  const allTasks = uncomp.map((task, index) => (
+    var uncomp = [];
+    if (this.state.searchBy == "Tags") {
+      uncomp = this.state.tasks.filter(t => !t.completed && (this.state.search != "" ? this.includes(t.tags.map(v => v.toLowerCase())) : true));
+    } else if (this.state.searchBy == "Title/Description") {
+	  uncomp = this.state.tasks.filter(t => !t.completed && (this.state.search ? this.includesTD(t) : true))
+    } else {
+	  uncomp = this.state.tasks.filter(t => !t.completed && (this.state.search ? t.deadline == this.state.search : true));
+    }
+    const allTasks = uncomp.map((task, index) => (
 		<div key={index} className="col-md-6 col-lg-4">
 			<div className = "card-body">
 				<h5 className = "card-title"><i className = "far fa-circle" id = "checked" onClick = {(e) => this.toggleCheck(task.id, task)}></i>   {task.title}</h5>
@@ -101,8 +149,15 @@ class Tasks extends React.Component {
 	))
 	
 	// note that allTasks here refers to all ongoing tasks.
-	
-  const comp = this.state.tasks.filter(t => t.completed && (t.tags.map(v => v.toLowerCase()).includes(this.state.search.toLowerCase()) || t.title.toLowerCase().indexOf(this.state.search.toLowerCase()) != -1 || t.description.toLowerCase().indexOf(this.state.search.toLowerCase()) != -1));
+  
+  var comp = [];
+  if (this.state.searchBy == "Tags") {
+    comp = this.state.tasks.filter(t => t.completed && (this.state.search != "" ? this.includes(t.tags.map(v => v.toLowerCase())) : true));
+  } else if (this.state.searchBy == "Title/Description") {
+	comp = this.state.tasks.filter(t => t.completed && (this.state.search ? this.includesTD(t) : true))
+  } else {
+	comp = this.state.tasks.filter(t => t.completed && (this.state.search ? t.deadline == this.state.search : true));
+  }
   const completedTasks = comp.map((task, index) => (
 		<div key={index} className="col-md-6 col-lg-4">
 			<div className = "card-body">
@@ -164,18 +219,21 @@ class Tasks extends React.Component {
 			  </Link>
 			</div>
 			<div className = "tab">
-				<button className="tablinks active">
+				<button className="tablinks active" id = "Tags" onClick = {(e) => this.updateSearchBy("Tags")}>
 					By Tag(s)
 				</button>
-				<button className="tablinks">
+				<button className="tablinks" id = "Title/Description" onClick = {(e) => this.updateSearchBy("Title/Description")}>
 					By Title/Description
 				</button>
-				<button className="tablinks">
+				<button className="tablinks" id = "Deadline" onClick = {(e) => this.updateSearchBy("Deadline")}>
 					By Deadline
 				</button>
 			</div>
-			<div id = "searchbar">
-			  <input onChange = {this.updateSearch} value = {this.state.search} type = "text" className ="form-control mb-5" placeholder="Search for task(s)" aria-label="Search for task(s)"></input>
+			<div id = "searchbar" className = "input-group md-form form-sm form-2 pl-0 mb-5">
+			  <input onChange = {this.updateSearch} value = {this.state.search} type = "text" className ="form-control" id = "search" placeholder="Search for task(s) by Tags, separated by commas" aria-label="Search for task(s)"></input>
+			  <div className="input-group-append">
+				<span className="input-group-text" id="basic-text1"><i className="fas fa-search text-grey" aria-hidden="true"></i></span>
+			  </div>
 			</div>
 			
 			<div className="current">

@@ -100,3 +100,12 @@
 .tab button.active {
   background-color: #ccc;
 }
+
+button:focus, button:active, i:focus, i:active, a:focus, a:active {
+  border: none;
+  outline: 0;
+}
+
+*:focus {
+  outline: 0 !important;
+}
