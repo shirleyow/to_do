@@ -80,8 +80,8 @@ class Tasks extends React.Component {
   }
    
   render() {
-	//console.log(this.state)
-  const allTasks = this.state.tasks.filter(t => !t.completed && (t.tags.includes(this.state.search) || t.title.indexOf(this.state.search) != -1 || t.description.indexOf(this.state.search) != -1)).map((task, index) => (
+  const uncomp = this.state.tasks.filter(t => !t.completed && (t.tags.map(v => v.toLowerCase()).includes(this.state.search.toLowerCase()) || t.title.toLowerCase().indexOf(this.state.search.toLowerCase()) != -1 || t.description.toLowerCase().indexOf(this.state.search.toLowerCase()) != -1))
+  const allTasks = uncomp.map((task, index) => (
 		<div key={index} className="col-md-6 col-lg-4">
 			<div className = "card-body">
 				<h5 className = "card-title"><i className = "far fa-circle" id = "checked" onClick = {(e) => this.toggleCheck(task.id, task)}></i>   {task.title}</h5>
@@ -102,7 +102,8 @@ class Tasks extends React.Component {
 	
 	// note that allTasks here refers to all ongoing tasks.
 	
-  const completedTasks = this.state.tasks.filter(t => t.completed && (t.tags.includes(this.state.search) || t.title.indexOf(this.state.search) != -1 || t.description.indexOf(this.state.search) != -1)).map((task, index) => (
+  const comp = this.state.tasks.filter(t => t.completed && (t.tags.map(v => v.toLowerCase()).includes(this.state.search.toLowerCase()) || t.title.toLowerCase().indexOf(this.state.search.toLowerCase()) != -1 || t.description.toLowerCase().indexOf(this.state.search.toLowerCase()) != -1));
+  const completedTasks = comp.map((task, index) => (
 		<div key={index} className="col-md-6 col-lg-4">
 			<div className = "card-body">
 				<h5 className = "card-title"><i className = "far fa-circle" id = "checked" onClick = {(e) => this.toggleCheck(task.id, task)}></i>   <span className="striked">{task.title}</span></h5>
@@ -132,8 +133,8 @@ class Tasks extends React.Component {
 	let today = new Date()
 	let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-	let currentTasksLength = this.state.tasks.filter(t => !t.completed).length;
-	let completedTasksLength = this.state.tasks.filter(t => t.completed).length;
+	let currentTasksLength = uncomp.length;
+	let completedTasksLength = comp.length;
 	let tags = [];
 	this.state.tasks.map(
 		item => {
@@ -155,18 +156,26 @@ class Tasks extends React.Component {
             </p>
 		  </div>
 		</section>
-		<div className="py-5">
-          <main className="container">
-			<div>
-				<div id = "searchbar">
-				  <input onChange = {this.updateSearch} value = {this.state.search} type = "text" className ="form-control" placeholder="Search" aria-label="Search"></input>
-				</div>
-				
-				<div className="text-right mb-3">
-				  <Link to="/new" className="btn custom-button">
-					New Task
-				  </Link>
-				</div>
+		<div>
+          <main className="container pb-5">
+			<div className="text-right mb-2">
+			  <Link to="/new" className="btn custom-button">
+				New Task
+			  </Link>
+			</div>
+			<div className = "tab">
+				<button className="tablinks active">
+					By Tag(s)
+				</button>
+				<button className="tablinks">
+					By Title/Description
+				</button>
+				<button className="tablinks">
+					By Deadline
+				</button>
+			</div>
+			<div id = "searchbar">
+			  <input onChange = {this.updateSearch} value = {this.state.search} type = "text" className ="form-control mb-5" placeholder="Search for task(s)" aria-label="Search for task(s)"></input>
 			</div>
 			
 			<div className="current">

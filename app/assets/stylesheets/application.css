@@ -76,3 +76,27 @@
 .current {
 	margin-bottom: 25px;
 }
+
+.tab {
+  overflow: hidden;
+  display: inline-flex;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tab button:hover {
+  background-color: #ddd;
+}
+
+.tab button.active {
+  background-color: #ccc;
+}
