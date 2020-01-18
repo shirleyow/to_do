@@ -7,7 +7,6 @@ import "../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
 import "../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
 import "../../../node_modules/select2/dist/css/select2.min.css";
 import "../../../node_modules/select2/dist/js/select2.min.js";
-import "../../../node_modules/daterangepicker/moment.min.js";
 import "../../../node_modules/daterangepicker/daterangepicker.js";
 import "../../../node_modules/daterangepicker/daterangepicker.css";
 
@@ -281,9 +280,9 @@ class Tasks extends React.Component {
       <div key={index} className="col-md-6 col-lg-4">
         <div className="card-body">
           <h5 className="card-title"><i className="far fa-circle" id="checked" onClick={(e) => this.toggleCheck(task.id, task)}></i>   {task.title}</h5>
-          <h6><i className="fas fa-bars unclicked"></i> {task.description}</h6>
-          <h6><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
-          <h6><i className="fas fa-tags unclicked"></i> {task.tags.map(
+          <h6 style = {task.description ? {} : { display: "none "}}><i className="fas fa-bars unclicked"></i> {task.description}</h6>
+          <h6 style = {task.deadline ? {} : { display: "none "}}><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
+          <h6 style = {task.tags.length != 0 ? {} : { display: "none "}}><i className="fas fa-tags unclicked"></i> {task.tags.map(
             item => <span className="tag">{item}</span>
           )}</h6>
           <div>{task.deadline ? this.dueDays(task.deadline) : ""}</div>
@@ -311,9 +310,9 @@ class Tasks extends React.Component {
       <div key={index} className="col-md-6 col-lg-4">
         <div className="card-body">
           <h5 className="card-title"><i className="far fa-circle" id="checked" onClick={(e) => this.toggleCheck(task.id, task)}></i>   <span className="striked">{task.title}</span></h5>
-          <h6><i className="fas fa-bars unclicked"></i> {task.description}</h6>
-          <h6><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
-          <h6><i className="fas fa-tags unclicked"></i> {task.tags.map(
+          <h6 id = "desc" style = {task.description ? {} : { display: "none "}}><i className="fas fa-bars unclicked"></i> {task.description}</h6>
+          <h6 id = "dl" style = {task.deadline ? {} : { display: "none "}}><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
+          <h6 id = "tgs" style = {task.tags.length != 0 ? {} : { display: "none "}}><i className="fas fa-tags unclicked"></i> {task.tags.map(
             item => <span className="tag">{item}</span>
           )}</h6>
         </div>
@@ -382,13 +381,14 @@ class Tasks extends React.Component {
               </div>
             </div>
             <div className="orderTabs mb-5 pt-4">
-              <b>Ordered by: </b>
+              <b>Order by: </b>
               <button className="btn btn-sm btn-secondary orderBy active" id="Latest" onClick={(e) => this.updateOrderBy("Latest")}>
                 Latest
               </button>
               <button className="btn btn-sm btn-secondary orderBy" id="DeadlineO" onClick={(e) => this.updateOrderBy("DeadlineO")}>
                 Deadline
               </button>
+              
             </div>
 
             <div className="current">
