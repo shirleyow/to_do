@@ -7,8 +7,6 @@ import "../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
 import "../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
 import "../../../node_modules/select2/dist/css/select2.min.css";
 import "../../../node_modules/select2/dist/js/select2.min.js";
-import "../../../node_modules/daterangepicker/daterangepicker.js";
-import "../../../node_modules/daterangepicker/daterangepicker.css";
 
 class Tasks extends React.Component {
   constructor(props) {
@@ -49,25 +47,6 @@ class Tasks extends React.Component {
         );
         this.setState({ searchTags: data });
       });
-
-    $('#searchDate').daterangepicker({
-      autoUpdateInput: false,
-      locale: {
-        cancelLabel: 'Clear'
-      }
-    });
-
-    $('#searchDate').on('apply.daterangepicker', (ev, picker) => {
-      $('#searchDate').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-      this.setState({ searchSDate: picker.startDate._d });
-      this.setState({ searchEDate: picker.endDate._d });
-    });
-
-    $('#searchDate').on('cancel.daterangepicker', (ev, picker) => {
-      $('#searchDate').val('');
-      this.setState({ searchSDate: null });
-      this.setState({ searchEDate: null });
-    });
   }
 
   toggleCheck(id, task) {
@@ -366,16 +345,12 @@ class Tasks extends React.Component {
               <button className="tablinks" id="Tags" onClick={(e) => this.updateSearchBy("Tags")}>
                 By Tag(s)
                 </button>
-              <button className="tablinks" id="Deadline" onClick={(e) => this.updateSearchBy("Deadline")}>
-                By Deadline
-                </button>
             </div>
             <div id="searchbar" className="input-group md-form form-sm form-2 pl-0">
               <select id="selectTags" className="js-example-basic-multiple" name="searchTags" value={this.state.searchTags} onChange={this.updateSearchTags} multiple="multiple" style={{ width: "96%", display: "none" }}>
                 {this.returnTags()}
               </select>
               <input onChange={this.updateSearch} value={this.state.search} type="text" className="form-control" id="search" placeholder="Search for task(s) by Title/Description" aria-label="Search for task(s)"></input>
-              <input type="text" name="searchDate" id="searchDate" style={{ width: "96%", display: "none" }} placeholder="Search for task(s) by Deadline" aria-label="Search for task(s)"></input>
               <div className="input-group-append">
                 <span className="input-group-text" id="basic-text1"><i className="fas fa-search text-grey" aria-hidden="true"></i></span>
               </div>
