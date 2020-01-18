@@ -126,6 +126,36 @@ class Tasks extends React.Component {
     this.setState({ searchTags: event.target.value });
   }
 
+  updateOrderBy(name) {
+    if (name == "Latest") {
+      const url = "/api/v1/tasks/index";
+      fetch(url)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was bad :(");
+        })
+        .then(response => this.setState({ tasks: response }))
+        .catch(error => console.log(error));
+      var other = "DeadlineO";
+    } else if (name == "DeadlineO") {
+      const url = "/api/v1/tasks/index2";
+      fetch(url)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was bad :(");
+        })
+        .then(response => this.setState({ tasks: response }))
+        .catch(error => console.log(error));
+      var other = "Latest";
+    }
+    document.getElementById(other).className = "btn btn-secondary btn-sm orderBy";
+    document.getElementById(name).className += " active";
+  }
+
   updateSearchBy(name) {
     this.setState({ searchBy: name });
     const tablink = document.getElementsByClassName("tablinks active");
@@ -187,6 +217,13 @@ class Tasks extends React.Component {
     return false;
   }
 
+  returnDate(deadline) {
+    let short_months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let short_days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    var d = new Date(deadline);
+    return (short_days[d.getDay()] + ", " + d.getDate() + " " + short_months[d.getMonth()] + " " + d.getFullYear());
+  }
+
   returnTags() {
     var tags = [];
     this.state.tasks.map(
@@ -208,10 +245,30 @@ class Tasks extends React.Component {
     }
   }
 
-  render() {
-    let short_months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    let short_days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  dueDays(deadline) {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const theDate = new Date(deadline);
+    const today = new Date();
+    const num = Math.round((theDate - today) / oneDay);
 
+    if (num < 0) {
+      return (
+        <small className="overdue"><b>Overdue for {Math.abs(num)} {Math.abs(num) == 1 ? "day" : "days"}</b></small>
+      )
+    } else if (num == 0) {
+      return (
+        <small className="today"><b>Due today</b></small>
+      )
+    } else if (num <= 7) {
+      return (
+        <small className="due"><b>Due in {num} {num == 1 ? "day" : "days"}</b></small>
+      )
+    } else {
+      return "";
+    }
+  }
+
+  render() {
     var uncomp = [];
     if (this.state.searchBy == "Tags") {
       uncomp = this.state.tasks.filter(t => !t.completed && t.tags.length != 0 && (this.state.searchTags != [] ? this.includes(t.tags.map(v => v.toLowerCase())) : true));
@@ -225,10 +282,11 @@ class Tasks extends React.Component {
         <div className="card-body">
           <h5 className="card-title"><i className="far fa-circle" id="checked" onClick={(e) => this.toggleCheck(task.id, task)}></i>   {task.title}</h5>
           <h6><i className="fas fa-bars unclicked"></i> {task.description}</h6>
-          <h6><i className="fas fa-calendar-day unclicked"></i> {task.deadline}</h6>
+          <h6><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
           <h6><i className="fas fa-tags unclicked"></i> {task.tags.map(
             item => <span className="tag">{item}</span>
           )}</h6>
+          <div>{task.deadline ? this.dueDays(task.deadline) : ""}</div>
         </div>
         <button type="button" id="trash" className="btn btn-sm btn-danger" onClick={(e) => this.deleteTask(task.id)}>
           <i className="fas fa-trash-alt"></i>
@@ -254,7 +312,7 @@ class Tasks extends React.Component {
         <div className="card-body">
           <h5 className="card-title"><i className="far fa-circle" id="checked" onClick={(e) => this.toggleCheck(task.id, task)}></i>   <span className="striked">{task.title}</span></h5>
           <h6><i className="fas fa-bars unclicked"></i> {task.description}</h6>
-          <h6><i className="fas fa-calendar-day unclicked"></i> {task.deadline}</h6>
+          <h6><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
           <h6><i className="fas fa-tags unclicked"></i> {task.tags.map(
             item => <span className="tag">{item}</span>
           )}</h6>
@@ -313,7 +371,7 @@ class Tasks extends React.Component {
                 By Deadline
                 </button>
             </div>
-            <div id="searchbar" className="input-group md-form form-sm form-2 pl-0 mb-5">
+            <div id="searchbar" className="input-group md-form form-sm form-2 pl-0">
               <select id="selectTags" className="js-example-basic-multiple" name="searchTags" value={this.state.searchTags} onChange={this.updateSearchTags} multiple="multiple" style={{ width: "96%", display: "none" }}>
                 {this.returnTags()}
               </select>
@@ -322,6 +380,15 @@ class Tasks extends React.Component {
               <div className="input-group-append">
                 <span className="input-group-text" id="basic-text1"><i className="fas fa-search text-grey" aria-hidden="true"></i></span>
               </div>
+            </div>
+            <div className="orderTabs mb-5 pt-4">
+              <b>Ordered by: </b>
+              <button className="btn btn-sm btn-secondary orderBy active" id="Latest" onClick={(e) => this.updateOrderBy("Latest")}>
+                Latest
+              </button>
+              <button className="btn btn-sm btn-secondary orderBy" id="DeadlineO" onClick={(e) => this.updateOrderBy("DeadlineO")}>
+                Deadline
+              </button>
             </div>
 
             <div className="current">

@@ -1,4 +1,9 @@
 class Api::V1::TasksController < ApplicationController
+  def index2
+	task = Task.all.order(deadline: :asc)
+	render json: task
+  end
+  
   def index
 	task = Task.all.order(updated_at: :desc)
 	render json: task

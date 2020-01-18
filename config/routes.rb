@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get 'tasks/index'
+	  get 'tasks/index2'
       post 'tasks/create'
 	  put 'tasks/update'
       put 'tasks/update/:id', to: 'tasks#update'
