@@ -20,11 +20,13 @@ class Tasks extends React.Component {
       searchBy: "Title/Description",
       searchTags: [],
       searchSDate: null,
-      searchEDate: null
+      searchEDate: null,
+      toggle: false
     };
 
     this.updateSearch = this.updateSearch.bind(this);
     this.updateSearchTags = this.updateSearchTags.bind(this);
+    this.updateToggle = this.updateToggle.bind(this);
   }
 
   componentDidMount() {
@@ -116,6 +118,10 @@ class Tasks extends React.Component {
         .then(() => window.location.replace("/tasks"))
         .catch(error => console.log(error.message));
     }
+  }
+
+  updateToggle(event) {
+    this.setState({ toggle: !this.state.toggle });
   }
 
   updateSearch(event) {
@@ -281,9 +287,9 @@ class Tasks extends React.Component {
       <div key={index} className="col-md-6 col-lg-4">
         <div className="card-body">
           <h5 className="card-title"><i className="far fa-circle" id="checked" onClick={(e) => this.toggleCheck(task.id, task)}></i>   {task.title}</h5>
-          <h6 style = {task.description ? {} : { display: "none "}}><i className="fas fa-bars unclicked"></i> {task.description}</h6>
-          <h6 style = {task.deadline ? {} : { display: "none "}}><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
-          <h6 style = {task.tags.length != 0 ? {} : { display: "none "}}><i className="fas fa-tags unclicked"></i> {task.tags.map(
+          <h6 style={task.description ? {} : { display: "none " }}><i className="fas fa-bars unclicked"></i> {task.description}</h6>
+          <h6 style={task.deadline ? {} : { display: "none " }}><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
+          <h6 style={task.tags.length != 0 ? {} : { display: "none " }}><i className="fas fa-tags unclicked"></i> {task.tags.map(
             item => <span className="tag">{item}</span>
           )}</h6>
           <div>{task.deadline ? this.dueDays(task.deadline) : ""}</div>
@@ -311,9 +317,9 @@ class Tasks extends React.Component {
       <div key={index} className="col-md-6 col-lg-4">
         <div className="card-body">
           <h5 className="card-title"><i className="far fa-circle" id="checked" onClick={(e) => this.toggleCheck(task.id, task)}></i>   <span className="striked">{task.title}</span></h5>
-          <h6 id = "desc" style = {task.description ? {} : { display: "none "}}><i className="fas fa-bars unclicked"></i> {task.description}</h6>
-          <h6 id = "dl" style = {task.deadline ? {} : { display: "none "}}><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
-          <h6 id = "tgs" style = {task.tags.length != 0 ? {} : { display: "none "}}><i className="fas fa-tags unclicked"></i> {task.tags.map(
+          <h6 id="desc" style={task.description ? {} : { display: "none " }}><i className="fas fa-bars unclicked"></i> {task.description}</h6>
+          <h6 id="dl" style={task.deadline ? {} : { display: "none " }}><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
+          <h6 id="tgs" style={task.tags.length != 0 ? {} : { display: "none " }}><i className="fas fa-tags unclicked"></i> {task.tags.map(
             item => <span className="tag">{item}</span>
           )}</h6>
         </div>
@@ -382,25 +388,32 @@ class Tasks extends React.Component {
               </div>
             </div>
             <div className="orderTabs mb-5 pt-4">
-              <b>Order by: </b>
+              <b>Sort by: </b>
               <button className="btn btn-sm btn-secondary orderBy active" id="Latest" onClick={(e) => this.updateOrderBy("Latest")}>
                 Latest
               </button>
               <button className="btn btn-sm btn-secondary orderBy" id="DeadlineO" onClick={(e) => this.updateOrderBy("DeadlineO")}>
                 Deadline
               </button>
-              
+              <label className="switch" style = {{ float: "right" }}>
+                <input type="checkbox" value = {this.state.toggle} onChange = {this.updateToggle}>
+                </input>
+                <span className="slider round"></span>
+              </label>
+              <label style = {{ float: "right", paddingRight: "10px" }}>{this.state.toggle ? "Completed " : "Ongoing "}</label>
             </div>
 
-            <div className="current">
-              <h3>{currentTasksLength} Current Task(s):</h3>
-              <div className="row">{currentTasksLength > 0 ? allTasks : noTask}</div>
-            </div>
-
-            <div className="completed">
+            {this.state.toggle ? (
+              <div className="completed">
               <h3>{completedTasksLength} Completed Task(s):</h3>
               <div className="row">{completedTasksLength > 0 ? completedTasks : noTask}</div>
             </div>
+            ) : (
+              <div className="current">
+              <h3>{currentTasksLength} Current Task(s):</h3>
+              <div className="row">{currentTasksLength > 0 ? allTasks : noTask}</div>
+            </div>
+            )}
           </main>
         </div>
       </>
