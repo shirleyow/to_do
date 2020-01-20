@@ -11,22 +11,22 @@ class NewTask extends React.Component {
 			tags: [],
 			completed: false
 		}
-		
+
 		this.onChange = this.onChange.bind(this)
 		this.onSubmit = this.onSubmit.bind(this)
 		this.stripHtmlEntities = this.stripHtmlEntities.bind(this)
 	}
-	
+
 	stripHtmlEntities(str) {
 		return String(str)
 			.replace(/</g, "&lt;")
 			.replace(/>/g, "&gt;")
 	}
-	
+
 	onChange(event) {
 		this.setState({ [event.target.name]: event.target.value })
 	}
-	
+
 	onSubmit(event) {
 		event.preventDefault()
 		const url = "/api/v1/tasks/create"
@@ -35,24 +35,24 @@ class NewTask extends React.Component {
 			this.state['tags'] = this.state['tags'] + ", hello" // for the tags to be read correctly a character is added at the front and another tag is added at the back.
 			this.state['tags'] = [...new Set(this.state['tags'].split(',').map(
 				item => item.trim()
-			).filter(function(item) {
+			).filter(function (item) {
 				return item != "";
 			}))].join()
 			this.state['tags'] = "a" + this.state['tags']
 		}
 		const { title, deadline, tags, completed, description } = this.state
-		
-		if (title.length == 0) 
+
+		if (title.length == 0)
 			return
-		
-		const body = { 
+
+		const body = {
 			title,
 			deadline,
 			tags,
 			completed,
 			description: description.replace(/\n/g, "<br> <br>")
 		}
-		
+
 		const token = document.querySelector('meta[name="csrf-token"]').content
 		fetch(url, {
 			method: "POST",
@@ -62,78 +62,78 @@ class NewTask extends React.Component {
 			},
 			body: JSON.stringify(body)
 		})
-		.then(response => {
-			if (response.ok) {
-				return response.json();
-			}
-			throw new Error("Network response was bad :(")
-		})
-		.then(response => this.props.history.push(`/tasks`))
-		.catch(error => console.log(error.message));
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				}
+				throw new Error("Network response was bad :(")
+			})
+			.then(response => this.props.history.push(`/tasks`))
+			.catch(error => console.log(error.message));
 	}
-	
+
 	render() {
 		return (
-			<div className = "container">
-				<h1 className = "font-weight-normal mb-5 header1">
-					New Task
+			<div className="container">
+				<h1 className="font-weight-normal mb-4 header1">
+					Add Task
 				</h1>
-				<form onSubmit = {this.onSubmit}>
-					<div className = "form-group">
-						<label htmlFor = "taskTitle">Task title</label>
+				<form onSubmit={this.onSubmit}>
+					<div className="form-group">
+						<label htmlFor="taskTitle">Task title</label>
 						<input
-							type = "text"
-							name = "title" 
-							id = "taskTitle"
-							className = "form-control"
+							type="text"
+							name="title"
+							id="taskTitle"
+							className="form-control"
 							required
-							onChange = {this.onChange}
+							onChange={this.onChange}
 						/>
 					</div>
-					<div className = "form-group">
-						<label htmlFor = "taskDescription">Description</label>
+					<div className="form-group">
+						<label htmlFor="taskDescription">Description</label>
 						<textarea
-							name = "description"
-							id = "taskDescription"
-							className = "form-control"
-							placeholder = "Optional"
-							rows = "3"
-							onChange = {this.onChange}
+							name="description"
+							id="taskDescription"
+							className="form-control"
+							placeholder="Optional"
+							rows="3"
+							onChange={this.onChange}
 						/>
 					</div>
-					<div className = "form-group">
-						<label htmlFor = "taskDeadline">Deadline</label>
+					<div className="form-group">
+						<label htmlFor="taskDeadline">Deadline</label>
 						<input
-							type = "date"
-							name = "deadline"
-							id = "taskDeadline"
-							className = "form-control"
-							placeholder = "Optional"
-							onChange = {this.onChange}
+							type="date"
+							name="deadline"
+							id="taskDeadline"
+							className="form-control"
+							placeholder="Optional"
+							onChange={this.onChange}
 						/>
 					</div>
-					<div className = "form-group">
-						<label htmlFor = "taskTags">Tag(s)</label>
+					<div className="form-group">
+						<label htmlFor="taskTags">Tag(s)</label>
 						<input
-							type = "text"
-							name = "tags"
-							id = "taskTags"
-							className = "form-control"
-							placeholder = "Optional"
-							onChange = {this.onChange}
+							type="text"
+							name="tags"
+							id="taskTags"
+							className="form-control"
+							placeholder="Optional"
+							onChange={this.onChange}
 						/>
-						<small id = "tagsHelp" className = "form-text text-muted">
+						<small id="tagsHelp" className="form-text text-muted">
 							Separate each tag with a comma.
 						</small>
 					</div>
 					<button type="submit" className="btn custom-button mt-3">
-                Create Task
+						Create Task
               </button>
-              <Link to="/tasks" className="btn btn-link mt-3">
-                Back to Tasks
+					<Link to="/tasks" className="btn btn-link mt-3">
+						Back to Tasks
               </Link>
-            </form>
-          </div>
+				</form>
+			</div>
 		);
 	}
 }

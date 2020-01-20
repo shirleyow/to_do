@@ -65,7 +65,7 @@
 	margin-right: 5px;
 }
 
-#checked {
+.checked {
 	cursor: pointer;
 }
 
@@ -196,4 +196,27 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+.panel {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.details {
+  margin-left: 45px;
+}
+
+#Latest {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#DeadlineO {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+footer {
+  background-color: lightgrey;
 }

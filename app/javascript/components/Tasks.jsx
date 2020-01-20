@@ -5,6 +5,7 @@ import $ from 'jquery';
 import "@fortawesome/fontawesome-free/scss/fontawesome";
 import "@fortawesome/fontawesome-free/scss/solid";
 import "@fortawesome/fontawesome-free/scss/regular";
+import "@fortawesome/fontawesome-free/scss/brands";
 import "select2/dist/css/select2.min.css";
 import "select2/dist/js/select2.min.js";
 import "daterangepicker/moment.min.js";
@@ -70,6 +71,53 @@ class Tasks extends React.Component {
       $('#searchDate').val('');
       this.setState({ searchSDate: null });
       this.setState({ searchEDate: null });
+    });
+    $('[data-toggle="tooltip"]').tooltip({
+      trigger : 'hover'
+    });
+    $(".tip-top").tooltip({
+      placement: 'top',
+      trigger : 'hover'
+    });
+    $(".tip-right").tooltip({
+      placement: 'right',
+      trigger : 'hover'
+    });
+    $(".tip-bottom").tooltip({
+      placement: 'bottom',
+      trigger : 'hover'
+    });
+    $(".tip-left").tooltip({
+      placement: 'left',
+      trigger : 'hover'
+    });
+    $('.tip-bottom').on('click', function () {
+      $(this).tooltip('dispose');
+    });
+  }
+
+  componentDidUpdate() {
+    $('[data-toggle="tooltip"]').tooltip({
+      trigger : 'hover'
+    });
+    $(".tip-top").tooltip({
+      placement: 'top',
+      trigger : 'hover'
+    });
+    $(".tip-right").tooltip({
+      placement: 'right',
+      trigger : 'hover'
+    });
+    $(".tip-bottom").tooltip({
+      placement: 'bottom',
+      trigger : 'hover'
+    });
+    $(".tip-left").tooltip({
+      placement: 'left',
+      trigger : 'hover'
+    });
+    $('.tip-bottom').on('click', function () {
+      $(this).tooltip('dispose');
     });
   }
 
@@ -259,15 +307,15 @@ class Tasks extends React.Component {
 
     if (num < 0) {
       return (
-        <small className="overdue"><b>Overdue for {Math.abs(num)} {Math.abs(num) == 1 ? "day" : "days"}</b></small>
+        <span className="overdue">Overdue for {Math.abs(num)} {Math.abs(num) == 1 ? "day" : "days"}</span>
       )
     } else if (num == 0) {
       return (
-        <small className="today"><b>Due today</b></small>
+        <span className="today">Due today</span>
       )
     } else if (num <= 7) {
       return (
-        <small className="due"><b>Due in {num} {num == 1 ? "day" : "days"}</b></small>
+        <span className="due">Due in {num} {num == 1 ? "day" : "days"}</span>
       )
     } else {
       return "";
@@ -284,22 +332,52 @@ class Tasks extends React.Component {
       uncomp = this.state.tasks.filter(t => !t.completed && t.deadline && (this.state.searchSDate ? (this.state.searchSDate <= new Date(t.deadline) && new Date(t.deadline) <= this.state.searchEDate) : true));
     }
     const allTasks = uncomp.map((task, index) => (
-      <div key={index} className="col-md-6 col-lg-4">
+      <div key={index} className="panel panel-default">
         <div className="card-body">
-          <h5 className="card-title"><i className="far fa-circle" id="checked" onClick={(e) => this.toggleCheck(task.id, task)}></i>   {task.title}</h5>
-          <h6 style={task.description ? {} : { display: "none " }}><i className="fas fa-bars unclicked"></i> {task.description}</h6>
-          <h6 style={task.deadline ? {} : { display: "none " }}><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
-          <h6 style={task.tags.length != 0 ? {} : { display: "none " }}><i className="fas fa-tags unclicked"></i> {task.tags.map(
-            item => <span className="tag">{item}</span>
-          )}</h6>
+          <div className="row mb-2">
+            <div className="col flex-grow-0">
+              <i className="far fa-circle checked" data-toggle="tooltip" data-original-title="Mark as completed" onClick={(e) => this.toggleCheck(task.id, task)}></i>
+            </div>
+            <div className="col">
+              <h5 className="card-title d-inline">{task.title}</h5>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col flex-grow-0 details">
+              <i style={task.description ? {} : { display: "none" }} className="fas fa-bars unclicked tip-left" title="Description"></i>
+            </div>
+            <div className="col">
+              <h6 style={{ fontWeight: "normal" }}>{task.description}</h6>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col flex-grow-0 details">
+              <i style={task.deadline ? {} : { display: "none" }} className="fas fa-calendar-day unclicked tip-left" title="Deadline"></i>
+            </div>
+            <div className="col">
+              <h6 style={{ fontWeight: "normal" }}>{task.deadline ? this.returnDate(task.deadline) : ""}</h6>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col flex-grow-0 details">
+              <i style={task.tags.length != 0 ? {} : { display: "none" }} className="fas fa-tags unclicked tip-left" title="Tag(s)"></i>
+            </div>
+            <div className="col">
+              <h6>{task.tags.map(
+                item => <span className="tag">{item}</span>
+              )}</h6>
+            </div>
+          </div>
           <div>{task.deadline ? this.dueDays(task.deadline) : ""}</div>
+          <div className="mt-2">
+            <button type="button" id="trash" className="btn btn-sm btn-danger tip-bottom" title="Delete Task" onClick={(e) => this.deleteTask(task.id)}>
+              <i className="fas fa-trash-alt"></i>
+            </button>
+            <Link to={`/update/${task.id}`} className="btn btn-sm btn-primary tip-bottom" title="Edit Task">
+              <i className="fas fa-edit"></i>
+            </Link>
+          </div>
         </div>
-        <button type="button" id="trash" className="btn btn-sm btn-danger" onClick={(e) => this.deleteTask(task.id)}>
-          <i className="fas fa-trash-alt"></i>
-        </button>
-        <Link to={`/update/${task.id}`} className="btn btn-sm btn-primary">
-          <i className="fas fa-edit"></i>
-        </Link>
       </div>
     ))
 
@@ -314,21 +392,51 @@ class Tasks extends React.Component {
       comp = this.state.tasks.filter(t => t.completed && t.deadline && (this.state.searchSDate ? (this.state.searchSDate <= new Date(t.deadline) && new Date(t.deadline) <= this.state.searchEDate) : true));
     }
     const completedTasks = comp.map((task, index) => (
-      <div key={index} className="col-md-6 col-lg-4">
+      <div key={index} className="panel panel-default">
         <div className="card-body">
-          <h5 className="card-title"><i className="far fa-circle" id="checked" onClick={(e) => this.toggleCheck(task.id, task)}></i>   <span className="striked">{task.title}</span></h5>
-          <h6 id="desc" style={task.description ? {} : { display: "none " }}><i className="fas fa-bars unclicked"></i> {task.description}</h6>
-          <h6 id="dl" style={task.deadline ? {} : { display: "none " }}><i className="fas fa-calendar-day unclicked"></i> {task.deadline ? this.returnDate(task.deadline) : ""}</h6>
-          <h6 id="tgs" style={task.tags.length != 0 ? {} : { display: "none " }}><i className="fas fa-tags unclicked"></i> {task.tags.map(
-            item => <span className="tag">{item}</span>
-          )}</h6>
+          <div className="row mb-2">
+            <div className="col flex-grow-0">
+              <i className="far fa-check-circle checked" data-toggle="tooltip" data-original-title="Mark as incomplete" onClick={(e) => this.toggleCheck(task.id, task)}></i>
+            </div>
+            <div className="col">
+              <h5 className="card-title d-inline striked">{task.title}</h5>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col flex-grow-0 details">
+              <i style={task.description ? {} : { display: "none" }} className="fas fa-bars unclicked tip-left" title="Description"></i>
+            </div>
+            <div className="col">
+              <h6 style={{ fontWeight: "normal" }}>{task.description}</h6>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col flex-grow-0 details">
+              <i style={task.deadline ? {} : { display: "none" }} className="fas fa-calendar-day unclicked tip-left" title="Deadline"></i>
+            </div>
+            <div className="col">
+              <h6 style={{ fontWeight: "normal" }}>{task.deadline ? this.returnDate(task.deadline) : ""}</h6>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col flex-grow-0 details">
+              <i style={task.tags.length != 0 ? {} : { display: "none" }} className="fas fa-tags unclicked tip-left" title="Tag(s)"></i>
+            </div>
+            <div className="col">
+              <h6>{task.tags.map(
+                item => <span className="tag">{item}</span>
+              )}</h6>
+            </div>
+          </div>
+          <div className="mt-2">
+            <button type="button" id="trash" className="btn btn-sm btn-danger tip-bottom" title="Delete Task" onClick={(e) => this.deleteTask(task.id)}>
+              <i className="fas fa-trash-alt"></i>
+            </button>
+            <Link to={`/update/${task.id}`} className="btn btn-sm btn-primary tip-bottom" title="Edit Task">
+              <i className="fas fa-edit"></i>
+            </Link>
+          </div>
         </div>
-        <button type="button" id="trash" className="btn btn-sm btn-danger" onClick={(e) => this.deleteTask(task.id)}>
-          <i className="fas fa-trash-alt"></i>
-        </button>
-        <Link to={`/update/${task.id}`} className="btn btn-sm btn-primary">
-          <i className="fas fa-edit"></i>
-        </Link>
       </div>
     ))
 
@@ -367,13 +475,13 @@ class Tasks extends React.Component {
               </Link>
             </div>
             <div className="tab">
-              <button className="tablinks active" id="Title/Description" onClick={(e) => this.updateSearchBy("Title/Description")}>
+              <button className="tablinks active" id="Title/Description" data-toggle="tooltip" title="Search by Title/Description" onClick={(e) => this.updateSearchBy("Title/Description")}>
                 By Title/Description
                 </button>
-              <button className="tablinks" id="Tags" onClick={(e) => this.updateSearchBy("Tags")}>
+              <button className="tablinks" id="Tags" data-toggle="tooltip" title="Search by Tag(s)" onClick={(e) => this.updateSearchBy("Tags")}>
                 By Tag(s)
                 </button>
-              <button className="tablinks" id="Deadline" onClick={(e) => this.updateSearchBy("Deadline")}>
+              <button className="tablinks" id="Deadline" data-toggle="tooltip" title="Search by Deadline Range" onClick={(e) => this.updateSearchBy("Deadline")}>
                 By Deadline
                 </button>
             </div>
@@ -387,35 +495,42 @@ class Tasks extends React.Component {
                 <span className="input-group-text" id="basic-text1"><i className="fas fa-search text-grey" aria-hidden="true"></i></span>
               </div>
             </div>
-            <div className="orderTabs mb-5 pt-4">
+            <div className="orderTabs mb-4 pt-4">
               <b>Sort by: </b>
-              <button className="btn btn-sm btn-secondary orderBy active" id="Latest" onClick={(e) => this.updateOrderBy("Latest")}>
+              <button className="btn btn-sm btn-secondary orderBy active tip-bottom" title="Sort by last modified time" id="Latest" onClick={(e) => this.updateOrderBy("Latest")}>
                 Latest
               </button>
-              <button className="btn btn-sm btn-secondary orderBy" id="DeadlineO" onClick={(e) => this.updateOrderBy("DeadlineO")}>
+              <button className="btn btn-sm btn-secondary orderBy tip-bottom" title="Sort by deadline" id="DeadlineO" onClick={(e) => this.updateOrderBy("DeadlineO")}>
                 Deadline
               </button>
-              <label className="switch" style = {{ float: "right" }}>
-                <input type="checkbox" value = {this.state.toggle} onChange = {this.updateToggle}>
+              <label className="switch tip-bottom" style={{ float: "right" }} title="Toggle between ongoing and completed tasks">
+                <input type="checkbox" value={this.state.toggle} onChange={this.updateToggle}>
                 </input>
                 <span className="slider round"></span>
               </label>
-              <label style = {{ float: "right", paddingRight: "10px" }}>{this.state.toggle ? "Completed " : "Ongoing "}</label>
+              <label style={{ float: "right", paddingRight: "10px" }}>{this.state.toggle ? "Completed " : "Ongoing "}</label>
             </div>
 
             {this.state.toggle ? (
               <div className="completed">
-              <h3>{completedTasksLength} Completed Task(s):</h3>
-              <div className="row">{completedTasksLength > 0 ? completedTasks : noTask}</div>
-            </div>
+                <h3>{completedTasksLength} Completed {completedTasksLength <= 1 ? "Task" : "Tasks"}:</h3>
+                <div>{completedTasksLength > 0 ? completedTasks : noTask}</div>
+              </div>
             ) : (
-              <div className="current">
-              <h3>{currentTasksLength} Current Task(s):</h3>
-              <div className="row">{currentTasksLength > 0 ? allTasks : noTask}</div>
-            </div>
-            )}
+                <div className="current">
+                  <h3>{currentTasksLength} Current {currentTasksLength <= 1 ? "Task" : "Tasks"}:</h3>
+                  <div>{currentTasksLength > 0 ? allTasks : noTask}</div>
+                </div>
+              )}
           </main>
         </div>
+        <footer className="page-footer font-small">
+          <div className="footer-copyright text-center py-3">
+            <a href="https://github.com/shirleyow/to_do">
+              <i className="fab fa-github" style={{ color: "black" }}></i>
+            </a> Shirley Ow, 2020
+          </div>
+        </footer>
       </>
     );
   }
