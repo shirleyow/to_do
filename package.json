@@ -11,6 +11,7 @@
     "@rails/webpacker": "4.2.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bootstrap": "^4.4.1",
+    "daterangepicker": "https://github.com/dangrossman/daterangepicker.git",
     "jquery": "^3.4.1",
     "moment": "^2.24.0",
     "popper.js": "^1.16.0",
@@ -20,6 +21,7 @@
     "react-native-elements": "^1.2.7",
     "react-native-vector-icons": "^6.6.0",
     "react-router-dom": "^5.1.2",
+    "select2": "https://github.com/select2/select2.git",
     "turbolinks": "^5.2.0"
   },
   "version": "0.1.0",
