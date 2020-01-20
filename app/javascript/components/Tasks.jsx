@@ -2,14 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import $ from 'jquery';
-import "../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
-import "../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
-import "../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
-import "../../../node_modules/select2/dist/css/select2.min.css";
-import "../../../node_modules/select2/dist/js/select2.min.js";
-import "../../../node_modules/daterangepicker/moment.min.js";
-import "../../../node_modules/daterangepicker/daterangepicker.js";
-import "../../../node_modules/daterangepicker/daterangepicker.css";
+import "@fortawesome/fontawesome-free/scss/fontawesome";
+import "@fortawesome/fontawesome-free/scss/solid";
+import "@fortawesome/fontawesome-free/scss/regular";
+import "select2/dist/css/select2.min.css";
+import "select2/dist/js/select2.min.js";
+import "daterangepicker/moment.min.js";
+import "daterangepicker/daterangepicker.js";
+import "daterangepicker/daterangepicker.css";
 
 class Tasks extends React.Component {
   constructor(props) {
