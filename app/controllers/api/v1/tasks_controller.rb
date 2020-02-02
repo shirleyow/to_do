@@ -1,4 +1,9 @@
 class Api::V1::TasksController < ApplicationController
+  def index3
+    task = Task.all.order(important: :desc, deadline: :asc)
+    render json: task
+  end
+  
   def index2
 	task = Task.all.order(deadline: :asc)
 	render json: task
@@ -34,7 +39,7 @@ class Api::V1::TasksController < ApplicationController
   
   private
   def task_params
-	params.permit(:title, :description, :deadline, :tags, :completed, :id)
+	params.permit(:title, :description, :deadline, :tags, :completed, :id, :important)
   end
   
   def task

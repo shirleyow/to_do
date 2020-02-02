@@ -9,7 +9,8 @@ class NewTask extends React.Component {
 			description: "",
 			deadline: null,
 			tags: [],
-			completed: false
+			completed: false,
+			important: 0
 		}
 
 		this.onChange = this.onChange.bind(this)
@@ -40,7 +41,7 @@ class NewTask extends React.Component {
 			}))].join()
 			this.state['tags'] = "a" + this.state['tags']
 		}
-		const { title, deadline, tags, completed, description } = this.state
+		const { title, deadline, tags, completed, description, important } = this.state
 
 		if (title.length == 0)
 			return
@@ -50,7 +51,8 @@ class NewTask extends React.Component {
 			deadline,
 			tags,
 			completed,
-			description: description.replace(/\n/g, "<br> <br>")
+			important,
+			description: description.replace(/\n/g, "<br>")
 		}
 
 		const token = document.querySelector('meta[name="csrf-token"]').content

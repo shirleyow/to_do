@@ -62,7 +62,8 @@
 }
 
 #trash {
-	margin-right: 5px;
+  margin-left: 20px;
+  cursor: pointer;
 }
 
 .checked {
@@ -128,6 +129,10 @@ input {
 
 .due {
   color: green;
+}
+
+.longdue {
+  color: darkgreen;
 }
 
 .orderTabs .btn.btn-secondary.btn-sm.orderBy.active {
@@ -215,8 +220,58 @@ input:checked + .slider:before {
 #DeadlineO {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 footer {
   background-color: lightgrey;
+}
+
+#addTask, #backHome {
+  text-align: center;
+  transition: all 0.5s;
+}
+
+#addTask span, #backHome span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+#addTask span:after {
+  content: '\002B';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#addTask:hover span {
+  padding-right: 18px;
+}
+
+#addTask:hover span:after, #backHome:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+#backHome span:after {
+  content: '\00AB';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: -50px;
+  transition: 0.5s;
+}
+
+#backHome:hover span {
+  padding-left: 15px;
+}
+
+#Importance {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }

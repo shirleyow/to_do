@@ -12,6 +12,7 @@
 		description: "Something to be done", 
 		deadline: 20200110,
 		tags: ["Before New Year!"],
-		completed: false
+		completed: false,
+		important: 0
 	)
 end

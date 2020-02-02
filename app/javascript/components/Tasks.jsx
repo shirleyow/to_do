@@ -73,23 +73,23 @@ class Tasks extends React.Component {
       this.setState({ searchEDate: null });
     });
     $('[data-toggle="tooltip"]').tooltip({
-      trigger : 'hover'
+      trigger: 'hover'
     });
     $(".tip-top").tooltip({
       placement: 'top',
-      trigger : 'hover'
+      trigger: 'hover'
     });
     $(".tip-right").tooltip({
       placement: 'right',
-      trigger : 'hover'
+      trigger: 'hover'
     });
     $(".tip-bottom").tooltip({
       placement: 'bottom',
-      trigger : 'hover'
+      trigger: 'hover'
     });
     $(".tip-left").tooltip({
       placement: 'left',
-      trigger : 'hover'
+      trigger: 'hover'
     });
     $('.tip-bottom').on('click', function () {
       $(this).tooltip('dispose');
@@ -98,23 +98,23 @@ class Tasks extends React.Component {
 
   componentDidUpdate() {
     $('[data-toggle="tooltip"]').tooltip({
-      trigger : 'hover'
+      trigger: 'hover'
     });
     $(".tip-top").tooltip({
       placement: 'top',
-      trigger : 'hover'
+      trigger: 'hover'
     });
     $(".tip-right").tooltip({
       placement: 'right',
-      trigger : 'hover'
+      trigger: 'hover'
     });
     $(".tip-bottom").tooltip({
       placement: 'bottom',
-      trigger : 'hover'
+      trigger: 'hover'
     });
     $(".tip-left").tooltip({
       placement: 'left',
-      trigger : 'hover'
+      trigger: 'hover'
     });
     $('.tip-bottom').on('click', function () {
       $(this).tooltip('dispose');
@@ -145,6 +145,30 @@ class Tasks extends React.Component {
       .catch(error => console.log(error.message));
   }
 
+  toggleStar(id, task) {
+    const url = `/api/v1/tasks/update/${id}`;
+    const token = document.querySelector('meta[name="csrf-token"]').content
+    const int1 = (task.important == 0) ? 1 : 0;
+    const body = { important: int1 }
+
+    fetch(url, {
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then(() => window.location.replace("/tasks")) // this can be improved
+      .catch(error => console.log(error.message));
+  }
+
   deleteTask(id) {
     const url = `/api/v1/destroy/${id}`;
     const token = document.querySelector('meta[name="csrf-token"]').content;
@@ -163,7 +187,9 @@ class Tasks extends React.Component {
           }
           throw new Error("Network response was not ok.");
         })
-        .then(() => window.location.replace("/tasks"))
+        .then(() => {
+          window.location.replace("/tasks");
+        })
         .catch(error => console.log(error.message));
     }
   }
@@ -193,6 +219,7 @@ class Tasks extends React.Component {
         .then(response => this.setState({ tasks: response }))
         .catch(error => console.log(error));
       var other = "DeadlineO";
+      var other2 = "Importance";
     } else if (name == "DeadlineO") {
       const url = "/api/v1/tasks/index2";
       fetch(url)
@@ -205,8 +232,23 @@ class Tasks extends React.Component {
         .then(response => this.setState({ tasks: response }))
         .catch(error => console.log(error));
       var other = "Latest";
+      var other2 = "Importance";
+    } else if (name == "Importance") {
+      const url = "/api/v1/tasks/index3";
+      fetch(url)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was bad :(");
+        })
+        .then(response => this.setState({ tasks: response }))
+        .catch(error => console.log(error));
+      var other = "Latest";
+      var other2 = "DeadlineO";
     }
     document.getElementById(other).className = "btn btn-secondary btn-sm orderBy";
+    document.getElementById(other2).className = "btn btn-secondary btn-sm orderBy";
     document.getElementById(name).className += " active";
   }
 
@@ -318,7 +360,9 @@ class Tasks extends React.Component {
         <span className="due">Due in {num} {num == 1 ? "day" : "days"}</span>
       )
     } else {
-      return "";
+      return (
+        <span className="longdue">Due in {num} days</span>
+      )
     }
   }
 
@@ -341,41 +385,52 @@ class Tasks extends React.Component {
             <div className="col">
               <h5 className="card-title d-inline">{task.title}</h5>
             </div>
+            <div className="col float-right">
+              <i className={task.important == 1 ? "fas fa-star text-warning checked float-right" : "far fa-star checked float-right"} data-toggle="tooltip" data-original-title={task.important == 1 ? "Mark as unimportant" : "Mark as important"} onClick={(e) => this.toggleStar(task.id, task)}></i>
+            </div>
           </div>
+          {task.description ? (
+            <div className="row">
+              <div className="col flex-grow-0 details">
+                <i style={task.description ? {} : { display: "none" }} className="fas fa-bars unclicked tip-left" title="Description"></i>
+              </div>
+              <div className="col">
+                <h6 style={{ fontWeight: "normal" }}>{task.description}</h6>
+              </div>
+            </div>) : ""
+          }
+          {task.deadline ? (
+            <div className="row">
+              <div className="col flex-grow-0 details">
+                <i style={task.deadline ? {} : { display: "none" }} className="fas fa-calendar-day unclicked tip-left" title="Deadline"></i>
+              </div>
+              <div className="col">
+                <h6 style={{ fontWeight: "normal" }}>{task.deadline ? this.returnDate(task.deadline) : ""}</h6>
+              </div>
+            </div>) : ""
+          }
+          {task.tags.length != 0 ? (
+            <div className="row">
+              <div className="col flex-grow-0 details">
+                <i style={task.tags.length != 0 ? {} : { display: "none" }} className="fas fa-tags unclicked tip-left" title="Tag(s)"></i>
+              </div>
+              <div className="col">
+                <h6>{task.tags.map(
+                  item => <span className="tag">{item}</span>
+                )}</h6>
+              </div>
+            </div>) : ""
+          }
           <div className="row">
-            <div className="col flex-grow-0 details">
-              <i style={task.description ? {} : { display: "none" }} className="fas fa-bars unclicked tip-left" title="Description"></i>
-            </div>
             <div className="col">
-              <h6 style={{ fontWeight: "normal" }}>{task.description}</h6>
+              {task.deadline ? this.dueDays(task.deadline) : ""}
             </div>
-          </div>
-          <div className="row">
-            <div className="col flex-grow-0 details">
-              <i style={task.deadline ? {} : { display: "none" }} className="fas fa-calendar-day unclicked tip-left" title="Deadline"></i>
+            <div className="col float-right">
+              <i id="trash" className="tip-bottom fas fa-trash-alt float-right text-danger" title="Delete Task" onClick={(e) => this.deleteTask(task.id)}></i>
+              <Link to={`/update/${task.id}`} className="tip-bottom float-right" title="Edit Task">
+                <i className="fas fa-edit float-right text-primary"></i>
+              </Link>
             </div>
-            <div className="col">
-              <h6 style={{ fontWeight: "normal" }}>{task.deadline ? this.returnDate(task.deadline) : ""}</h6>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col flex-grow-0 details">
-              <i style={task.tags.length != 0 ? {} : { display: "none" }} className="fas fa-tags unclicked tip-left" title="Tag(s)"></i>
-            </div>
-            <div className="col">
-              <h6>{task.tags.map(
-                item => <span className="tag">{item}</span>
-              )}</h6>
-            </div>
-          </div>
-          <div>{task.deadline ? this.dueDays(task.deadline) : ""}</div>
-          <div className="mt-2">
-            <button type="button" id="trash" className="btn btn-sm btn-danger tip-bottom" title="Delete Task" onClick={(e) => this.deleteTask(task.id)}>
-              <i className="fas fa-trash-alt"></i>
-            </button>
-            <Link to={`/update/${task.id}`} className="btn btn-sm btn-primary tip-bottom" title="Edit Task">
-              <i className="fas fa-edit"></i>
-            </Link>
           </div>
         </div>
       </div>
@@ -402,39 +457,45 @@ class Tasks extends React.Component {
               <h5 className="card-title d-inline striked">{task.title}</h5>
             </div>
           </div>
+          {task.description ? (
+            <div className="row">
+              <div className="col flex-grow-0 details">
+                <i style={task.description ? {} : { display: "none" }} className="fas fa-bars unclicked tip-left" title="Description"></i>
+              </div>
+              <div className="col">
+                <h6 style={{ fontWeight: "normal" }}>{task.description}</h6>
+              </div>
+            </div>) : ""
+          }
+          {task.deadline ? (
+            <div className="row">
+              <div className="col flex-grow-0 details">
+                <i style={task.deadline ? {} : { display: "none" }} className="fas fa-calendar-day unclicked tip-left" title="Deadline"></i>
+              </div>
+              <div className="col">
+                <h6 style={{ fontWeight: "normal" }}>{task.deadline ? this.returnDate(task.deadline) : ""}</h6>
+              </div>
+            </div>) : ""
+          }
+          {task.tags.length != 0 ? (
+            <div className="row">
+              <div className="col flex-grow-0 details">
+                <i style={task.tags.length != 0 ? {} : { display: "none" }} className="fas fa-tags unclicked tip-left" title="Tag(s)"></i>
+              </div>
+              <div className="col">
+                <h6>{task.tags.map(
+                  item => <span className="tag">{item}</span>
+                )}</h6>
+              </div>
+            </div>) : ""
+          }
           <div className="row">
-            <div className="col flex-grow-0 details">
-              <i style={task.description ? {} : { display: "none" }} className="fas fa-bars unclicked tip-left" title="Description"></i>
+            <div className="col float-right">
+              <i id="trash" className="tip-bottom fas fa-trash-alt float-right text-danger" title="Delete Task" onClick={(e) => this.deleteTask(task.id)}></i>
+              <Link to={`/update/${task.id}`} className="tip-bottom float-right" title="Edit Task">
+                <i className="fas fa-edit float-right text-primary"></i>
+              </Link>
             </div>
-            <div className="col">
-              <h6 style={{ fontWeight: "normal" }}>{task.description}</h6>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col flex-grow-0 details">
-              <i style={task.deadline ? {} : { display: "none" }} className="fas fa-calendar-day unclicked tip-left" title="Deadline"></i>
-            </div>
-            <div className="col">
-              <h6 style={{ fontWeight: "normal" }}>{task.deadline ? this.returnDate(task.deadline) : ""}</h6>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col flex-grow-0 details">
-              <i style={task.tags.length != 0 ? {} : { display: "none" }} className="fas fa-tags unclicked tip-left" title="Tag(s)"></i>
-            </div>
-            <div className="col">
-              <h6>{task.tags.map(
-                item => <span className="tag">{item}</span>
-              )}</h6>
-            </div>
-          </div>
-          <div className="mt-2">
-            <button type="button" id="trash" className="btn btn-sm btn-danger tip-bottom" title="Delete Task" onClick={(e) => this.deleteTask(task.id)}>
-              <i className="fas fa-trash-alt"></i>
-            </button>
-            <Link to={`/update/${task.id}`} className="btn btn-sm btn-primary tip-bottom" title="Edit Task">
-              <i className="fas fa-edit"></i>
-            </Link>
           </div>
         </div>
       </div>
@@ -456,8 +517,8 @@ class Tasks extends React.Component {
 
     return (
       <>
-        <Link to="/" className="btn custom-button left">
-          Back
+        <Link to="/" className="btn custom-button left" id="backHome">
+          <span> Back</span>
         </Link>
         <section className="jumbotron jumbotron-fluid text-center">
           <div className="container py-4">
@@ -470,8 +531,8 @@ class Tasks extends React.Component {
         <div>
           <main className="container pb-5">
             <div className="text-right mb-2">
-              <Link to="/new" className="btn custom-button">
-                New Task
+              <Link to="/new" className="btn custom-button" id="addTask">
+                <span>New Task</span>
               </Link>
             </div>
             <div className="tab">
@@ -502,6 +563,9 @@ class Tasks extends React.Component {
               </button>
               <button className="btn btn-sm btn-secondary orderBy tip-bottom" title="Sort by deadline" id="DeadlineO" onClick={(e) => this.updateOrderBy("DeadlineO")}>
                 Deadline
+              </button>
+              <button className="btn btn-sm btn-secondary orderBy tip-bottom" title="Sort by importance, then by deadline" id="Importance" onClick={(e) => this.updateOrderBy("Importance")}>
+                Importance
               </button>
               <label className="switch tip-bottom" style={{ float: "right" }} title="Toggle between ongoing and completed tasks">
                 <input type="checkbox" value={this.state.toggle} onChange={this.updateToggle}>
