@@ -5,7 +5,6 @@ class CreateTasks < ActiveRecord::Migration[6.0]
       t.text :description
       t.date :deadline
       t.text :tags, array: true, default: []
-	  t.boolean :completed, default: false
 
       t.timestamps
     end
