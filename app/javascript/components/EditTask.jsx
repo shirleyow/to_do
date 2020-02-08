@@ -57,7 +57,10 @@ class EditTask extends React.Component {
 				}
 				throw new Error("Network response was not ok.");
 			})
-			.then(response => this.props.history.push(`/tasks`))
+			.then(response => {
+				this.props.history.push(`/tasks`);
+				document.getElementById('edit').style.display = "block";
+			})
 			.catch(error => console.log(error.message));
 	}
 

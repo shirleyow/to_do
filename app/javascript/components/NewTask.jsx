@@ -70,7 +70,10 @@ class NewTask extends React.Component {
 				}
 				throw new Error("Network response was bad :(")
 			})
-			.then(response => this.props.history.push(`/tasks`))
+			.then(response => {
+				this.props.history.push(`/tasks`);
+				document.getElementById('add').style.display = "block";
+			})
 			.catch(error => console.log(error.message));
 	}
 

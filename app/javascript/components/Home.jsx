@@ -7,7 +7,7 @@ export default () => (
       <div className="container secondary-color">
         <h1 className="display-4">To-Do List</h1>
         <p className="lead">
-          A Rails-React App.
+          A React-Rails App.
         </p>
         <hr className="my-4" />
         <Link

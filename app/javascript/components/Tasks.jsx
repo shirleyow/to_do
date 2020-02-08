@@ -141,7 +141,14 @@ class Tasks extends React.Component {
         }
         throw new Error("Network response was not ok.");
       })
-      .then(() => window.location.replace("/tasks"))
+      .then(() => {
+        window.location.replace("/tasks");
+        if (bool) {
+          alert("Task marked as completed.");
+        } else {
+          alert("Task marked as incomplete.");
+        }
+      })
       .catch(error => console.log(error.message));
   }
 
@@ -165,7 +172,14 @@ class Tasks extends React.Component {
         }
         throw new Error("Network response was not ok.");
       })
-      .then(() => window.location.replace("/tasks")) // this can be improved
+      .then(() => {
+        window.location.replace("/tasks");
+        if (int1 == 1) {
+          alert("Task marked as important.");
+        } else {
+          alert("Task marked as unimportant.");
+        }
+      }) // this can be improved
       .catch(error => console.log(error.message));
   }
 
@@ -189,6 +203,7 @@ class Tasks extends React.Component {
         })
         .then(() => {
           window.location.replace("/tasks");
+          alert("Task removed successfully.");
         })
         .catch(error => console.log(error.message));
     }
@@ -530,6 +545,14 @@ class Tasks extends React.Component {
         </section>
         <div>
           <main className="container pb-5">
+            <div className="alert alert-success alert-dismissible" style={{ display: "none" }} id="add">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              Task added successfully.
+            </div>
+            <div className="alert alert-success alert-dismissible" style={{ display: "none" }} id="edit">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              Task saved successfully.
+            </div>
             <div className="text-right mb-2">
               <Link to="/new" className="btn custom-button" id="addTask">
                 <span>New Task</span>
