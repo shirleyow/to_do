@@ -8,7 +8,6 @@ class ApplicationController < ActionController::Base
     def check_user_id_presence
         if cookies.encrypted.permanent[:user_id].nil?
             cookies.encrypted.permanent[:user_id] = SecureRandom.hex
-            puts "The cookie = " + cookies.encrypted.permanent[:user_id]
             redirect_to root_path
         end
     end
