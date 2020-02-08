@@ -1,16 +1,16 @@
 class Api::V1::TasksController < ApplicationController
   def index3
-    task = Task.all.order(important: :desc, deadline: :asc)
+    task = current_user_tasks.all.order(important: :desc, deadline: :asc)
     render json: task
   end
   
   def index2
-	  task = Task.all.order(deadline: :asc)
+	  task = current_user_tasks.all.order(deadline: :asc)
 	  render json: task
   end
   
   def index
-	  task = Task.all.order(updated_at: :desc)
+	  task = current_user_tasks.all.order(updated_at: :desc)
 	  render json: task
   end
 
