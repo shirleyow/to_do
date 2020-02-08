@@ -52,7 +52,7 @@ class NewTask extends React.Component {
 			tags,
 			completed,
 			important,
-			description: description.replace(/\n/g, "<br>")
+			description: description.replace(/\n/g, " ")
 		}
 
 		const token = document.querySelector('meta[name="csrf-token"]').content
