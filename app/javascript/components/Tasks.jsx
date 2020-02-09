@@ -399,8 +399,6 @@ class Tasks extends React.Component {
             </div>
             <div className="col">
               <h5 className="card-title d-inline">{task.title}</h5>
-            </div>
-            <div className="col float-right">
               <i className={task.important == 1 ? "fas fa-star text-warning checked float-right" : "far fa-star checked float-right"} data-toggle="tooltip" data-original-title={task.important == 1 ? "Mark as unimportant" : "Mark as important"} onClick={(e) => this.toggleStar(task.id, task)}></i>
             </div>
           </div>
@@ -597,12 +595,12 @@ class Tasks extends React.Component {
 
             {this.state.toggle ? (
               <div className="completed">
-                <h6 className="statement">You have <b style = {{ color: "darksalmon" }}>{completedTasksLength}</b> completed {completedTasksLength <= 1 ? "task" : "tasks"}.</h6>
+                <h6 className="statement">You have <b style={{ color: "darksalmon" }}>{completedTasksLength}</b> completed {completedTasksLength <= 1 ? "task" : "tasks"}.</h6>
                 <div>{completedTasksLength > 0 ? completedTasks : noTask}</div>
               </div>
             ) : (
                 <div className="current">
-                  <h6 className="statement">You have <b style = {{ color: "darksalmon" }}>{currentTasksLength}</b> ongoing {currentTasksLength <= 1 ? "task" : "tasks"}.</h6>
+                  <h6 className="statement">You have <b style={{ color: "darksalmon" }}>{currentTasksLength}</b> ongoing {currentTasksLength <= 1 ? "task" : "tasks"}.</h6>
                   <div>{currentTasksLength > 0 ? allTasks : noTask}</div>
                 </div>
               )}
