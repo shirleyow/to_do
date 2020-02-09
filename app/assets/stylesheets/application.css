@@ -276,3 +276,12 @@ footer {
   font-weight: 450;
   color: darkblue;
 }
+
+#pic {
+  text-align: center;
+}
+
+img {
+  height: 220px;
+  width: auto;
+}
