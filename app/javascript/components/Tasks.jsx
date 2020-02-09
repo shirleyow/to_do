@@ -546,14 +546,14 @@ class Tasks extends React.Component {
         <div>
           <main className="container pb-5">
             <div className="alert alert-success alert-dismissible" style={{ display: "none" }} id="add">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <a href="#" className="close" data-dismiss="alert" aria-label="close">&times;</a>
               Task added successfully.
             </div>
             <div className="alert alert-success alert-dismissible" style={{ display: "none" }} id="edit">
-              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <a href="#" className="close" data-dismiss="alert" aria-label="close">&times;</a>
               Task saved successfully.
             </div>
-            <div className="text-right mb-2">
+            <div className="text-right mb-3">
               <Link to="/new" className="btn custom-button" id="addTask">
                 <span>New Task</span>
               </Link>
@@ -600,12 +600,12 @@ class Tasks extends React.Component {
 
             {this.state.toggle ? (
               <div className="completed">
-                <h3>{completedTasksLength} Completed {completedTasksLength <= 1 ? "Task" : "Tasks"}:</h3>
+                <h6 className="statement">You have <b style = {{ color: "darksalmon" }}>{completedTasksLength}</b> completed {completedTasksLength <= 1 ? "task" : "tasks"}.</h6>
                 <div>{completedTasksLength > 0 ? completedTasks : noTask}</div>
               </div>
             ) : (
                 <div className="current">
-                  <h3>{currentTasksLength} Current {currentTasksLength <= 1 ? "Task" : "Tasks"}:</h3>
+                  <h6 className="statement">You have <b style = {{ color: "darksalmon" }}>{currentTasksLength}</b> ongoing {currentTasksLength <= 1 ? "task" : "tasks"}.</h6>
                   <div>{currentTasksLength > 0 ? allTasks : noTask}</div>
                 </div>
               )}

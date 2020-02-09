@@ -275,3 +275,8 @@ footer {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+
+.statement {
+  font-weight: 450;
+  color: darkblue;
+}
