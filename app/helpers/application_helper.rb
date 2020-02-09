@@ -16,7 +16,7 @@ module ApplicationHelper
             deadline: 20200510,
             tags: ["first tag","second tag"],
             completed: false,
-            important: 0,
+            important: 1,
             user_id: user_id
         )
 
@@ -26,7 +26,7 @@ module ApplicationHelper
             deadline: 20200110,
             tags: ["second tag"],
             completed: false,
-            important: 1,
+            important: 0,
             user_id: user_id
         )
 
@@ -34,7 +34,7 @@ module ApplicationHelper
             title: "First completed task!", 
             description: "", 
             deadline: 20200210,
-            tags: ["third tag"],
+            tags: ["first tag"],
             completed: true,
             important: 0,
             user_id: user_id

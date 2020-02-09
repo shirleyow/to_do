@@ -74,10 +74,6 @@
 	text-decoration: line-through;
 }
 
-.current {
-	margin-bottom: 25px;
-}
-
 .tab {
   overflow: hidden;
   display: inline-flex;
@@ -274,4 +270,9 @@ footer {
 #Importance {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+}
+
+.statement {
+  font-weight: 450;
+  color: darkblue;
 }

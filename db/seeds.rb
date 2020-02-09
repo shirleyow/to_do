@@ -5,14 +5,3 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-
-5.times do |i|
-	Task.create(
-		title: "Task to be completed!", 
-		description: "Something to be done", 
-		deadline: 20200110,
-		tags: ["Before New Year!"],
-		completed: false,
-		important: 0
-	)
-end
