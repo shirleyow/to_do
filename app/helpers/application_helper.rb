@@ -16,7 +16,8 @@ module ApplicationHelper
             deadline: 20200510,
             tags: ["first tag","second tag"],
             completed: false,
-            important: 0
+            important: 0,
+            user_id: user_id
         )
 
         Task.create(
@@ -25,7 +26,8 @@ module ApplicationHelper
             deadline: 20200110,
             tags: ["second tag"],
             completed: false,
-            important: 1
+            important: 1,
+            user_id: user_id
         )
 
         Task.create(
@@ -34,7 +36,8 @@ module ApplicationHelper
             deadline: 20200210,
             tags: ["third tag"],
             completed: true,
-            important: 0
+            important: 0,
+            user_id: user_id
         )
     end
 end
