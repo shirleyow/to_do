@@ -74,10 +74,6 @@
 	text-decoration: line-through;
 }
 
-.current {
-	margin-bottom: 25px;
-}
-
 .tab {
   overflow: hidden;
   display: inline-flex;
