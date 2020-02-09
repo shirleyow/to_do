@@ -1,4 +1,8 @@
-# README
+# 2019/2020 Winter Assignment
+#### Name: 
+Shirley Ow
+#### Matriculation Number: 
+A0187396J
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
