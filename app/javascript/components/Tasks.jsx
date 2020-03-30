@@ -602,7 +602,7 @@ class Tasks extends React.Component {
                 <div className="current">
                   <h6 className="statement">You have <b style={{ color: "darksalmon" }}>{currentTasksLength}</b> ongoing {currentTasksLength <= 1 ? "task" : "tasks"}.</h6>
                   <div>{currentTasksLength > 0 ? allTasks : noTask}</div>
-                  { this.state.tasks.filter(t => !t.completed).length == 0 ? (<div id = "pic"><img src={ require('../../assets/images/surprise.png') } /><p>Well done on completing all the tasks!<br></br>Go ahead and take a well-deserved break :)</p></div>) : "" }
+                  {this.state.tasks.filter(t => !t.completed).length == 0 ? (<div id="pic"><img src={require('../../assets/images/surprise.png')} /><p>Well done on completing all the tasks!<br></br>Go ahead and take a well-deserved break :)</p></div>) : ""}
                 </div>
               )}
           </main>
